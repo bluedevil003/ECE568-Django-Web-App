@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>MyLyft-Login</title>
+    <link href="{% static 'users/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="header header_login">
+      <div class="header_title">
+	<h1> Engineering Robust Server Software</h1>
+	<h2>--Login</h2>
+      </div>
+    </div>
+    <h2>{{ hello }}</h2>
+    <div class="form_style">
+      <form action="/login/" , method="post">
+	<!-- csrf(Cross Site Request Forgery) post method must have this -->
+	{% csrf_token %}
+	<br>
+	<h1> Login </h1>
+	<div class="form_list">
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>Username: </span>
+	      <input type="text" name="username" required>
+	    </div>
+	  </div>
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>Email: </span>
+	      <input type="email" name="email" required>
+	    </div>
+	  </div>
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>Password: </span>
+	      <input type="password" name="password" required>
+	    </div>
+	  </div>
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      {{ result }}
+	    </div>
+	  </div>
+	</div>
+	<div class="form_foo form_foo_login">
+	  <div class="form_foot">
+	    <input type="submit" value="Login" class="btn">
+	    &nbsp&nbsp<a href="{% url 'signup' %}">sign up</a>
+	  </div>
+	</div>
+	
+      </form>
+    </div>
+  </body>
+</html>

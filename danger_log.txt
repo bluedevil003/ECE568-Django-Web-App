@@ -1,0 +1,36 @@
+ERSS HW1 Django Web-App
+
+Kewei Xia & Kuan Wang
+
+Danger Log
+
+1/30:
+We use plain text to save users' passwords. Hackers may easily get a user's password.
+
+1/31:
+We find users can post rides arbitrarily. For example, the ride of the request ride can be earlier thanbe the current time;
+the requested passenger number can be larger than the maximum number of passengers that their requested vehicle can hold; A
+driver can confirm a ride which is earlier than the current time, etc. These kind od rides make nonsense.
+
+2/2:
+We find a problem about user confirmation. If user A knows user B's username and does not know his/her password, user A can
+still go to user B's homepage by enter the URL of user B's homepage and then do anything that user B can do.
+
+2/3:
+We use passlib to encrypt the original password, so user accounts become safer.
+We solve the user confirmation problem by sending the current user's email information to each new requested session and
+checking this field to verify whether it is the same user. So a user can no longer go to another user's page by simply
+typing the URL.
+However, we find that if a hacker deliberately fill in the information in that session (i.e. running some program), he/she
+can still bypass the login process to go to other users' page.
+
+2/4:
+We check the content of each request ride before they are posted. Illegal rides are prevented to be posted and the user
+receives a corresponding error message.
+
+2/6:
+We find that when two drivers confirm a same open ride at the same time, there can be arbitrary behaviors. For example,
+both drivers may receive the message of successful confirmation, but only one of them actually confirms the ride; or both
+fail to confirm the ride.
+As a result, we speculate that our website would have similar problems when many users access it simultaneously, although
+we cannot test this case now.

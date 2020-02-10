@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MyLyft-User</title>
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="header header_login">
+      <div class="header_username" style="color: grey;">
+	<a href="{% url 'homepage' user.username %}">Home</a>
+	{% if user.isDriver %}
+	<a href="{% url 'users:signout_driver' user.id %}" onclick="return confirm('Are you sure unregister as a driver?')">Unregister as a driver</a>
+	{% else %}
+	<a href="{% url 'users:signup_driver' user.id %}">Register as a driver</a>
+	{% endif %}
+	<a href="{% url 'logout' %}">Log out</a>
+      </div>
+      <div class="header_title detail">
+	<h1> Engineering Robust Server Software</h1>
+	<h2>--User Information</h2>
+      </div>
+    </div>
+    <div class="form_style">
+      <h1>Detail Informaiton (<a href="{% url 'users:edit_info' user.id %}">Edit</a>)</h1>
+      <div class="form_list">
+        <div class="form_list_info">
+          <div class="form_list_info_detail infolist">
+            <ul>
+              <li> User name: {{ user.username }} </li>
+              <li> Email address: {{ user.email }} </li>
+              {% if user.isDriver %}
+              <li>
+		Driver status: Registered dirver
+		(<a href="{% url 'users:signout_driver' user.id %}" onclick="return confirm('Are you sure unregister as a driver?')">Unregister as a driver</a>)
+	      </li>
+              <ul>
+                <li>Vehicle Type: {{ vehicle.v_type }}</li>
+		<li>License Number: {{ vehicle.license_number }}</li>
+		<li>Max Number: {{ vehicle.max_number }}</li>
+		<li>Special Info: {{ vehicle.comment }}</li>
+              </ul>
+              {% else %}
+              <li> Driver status: Not a driver (<a href="{% url 'users:signup_driver' user.id %}">Register as a driver</a>)</li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- incomplete ride this user own -->
+    <div class="form_style">
+      <h1>My Incomplete Ride</h1>
+      <div>{% if ride_incomplete %}
+        <table border="1" align="center">
+          <colgroup>
+            <col width="100">
+            <col width="200">
+	    <col width="300">
+            <col width="300">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+	    <col width="100">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td></td>
+	      <td valign="middle" align="center"><b> Role </b>
+              </td>
+              <td valign="middle" align="center"><b> Destination </b>
+              </td>
+              <td valign="middle" align="center"><b> Time </b>
+              </td>
+              <td valign="middle" align="center"><b> Vehicle Type </b>
+              </td>
+              <td valign="middle" align="center"><b> Status </b>
+              </td>
+	      <td valign="middle" align="center"><b> Shareable </b>
+              </td>
+              <td></td>
+            </tr>
+            {% for ride in ride_incomplete %}
+            <tr>
+              <td valign="middle" align="center">{{ forloop.counter }}</td>
+              <td valign="middle" align="center">
+		{% if ride.owner.username == user.username %}
+                Owner
+                {% else %}
+		Sharer
+		{% endif %}
+	      </td>
+              <td valign="middle" align="center">{{ ride.destination }}</td>
+              <td valign="middle" align="center">{{ ride.date }} {{ ride.time }}</td>
+              <td valign="middle" align="center">{{ ride.vehicle }}</td>
+              <td valign="middle" align="center">{{ ride.status }} </td>
+	      <td valign="middle" align="center">{{ ride.shareable }} </td>
+              <td valign="middle" align="center"><a href="{% url 'users:ride_detail' user.id ride.id %}"> detail </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No incomplete ride currently.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- complete ride this user own -->
+    <div class="form_style">
+      <h1>My Complete Ride</h1>
+      <div>{% if ride_complete %}
+        <table border="1" align="center">
+          <colgroup>
+            <col width="100">
+            <col width="200">
+	    <col width="300">
+            <col width="300">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+	    <col width="100">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td></td>
+	      <td valign="middle" align="center"><b> Role </b>
+              </td>
+              <td valign="middle" align="center"><b> Destination </b>
+              </td>
+              <td valign="middle" align="center"><b> Time </b>
+              </td>
+              <td valign="middle" align="center"><b> Vehicle Type </b>
+              </td>
+              <td valign="middle" align="center"><b> Status </b>
+              </td>
+	      <td valign="middle" align="center"><b> Shareable </b>
+              </td>
+              <td></td>
+            </tr>
+            {% for ride in ride_complete %}
+            <tr>
+              <td valign="middle" align="center">{{ forloop.counter }}</td>
+	      <td valign="middle" align="center">
+		{% if ride.owner.username == user.username %}
+                Owner
+                {% else %}
+		Sharer
+		{% endif %}
+	      </td>
+              <td valign="middle" align="center">{{ ride.destination }}</td>
+              <td valign="middle" align="center">{{ ride.date }} {{ ride.time }}</td>
+              <td valign="middle" align="center">{{ ride.vehicle }}</td>
+              <td valign="middle" align="center">{{ ride.status }} </td>
+	      <td valign="middle" align="center">{{ ride.shareable }} </td>
+              <td valign="middle" align="center"><a href="{% url 'users:ride_detail' user.id ride.id %}"> detail </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No complete ride currently.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ride this user confirm -->
+    {% if user.isDriver %}
+    <div class="form_style">
+      <h1>Ride Confirmed (as a driver)</h1>
+      <div>{% if drive_incomplete %}
+        <table border="1" align="center">
+          <colgroup>
+            <col width="100">
+	    <col width="200">
+            <col width="300">
+            <col width="300">
+            <col width="200">
+            <col width="200">
+            <col width="100">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td></td>
+	      <td valign="middle" align="center"><b> Owner </b>
+	      </td>
+              <td valign="middle" align="center"><b> Destination </b>
+              </td>
+              <td valign="middle" align="center"><b> Time </b>
+              </td>
+              <td valign="middle" align="center"><b> Vehicle </b>
+              </td>
+              <td valign="middle" align="center"><b> Status </b>
+              </td>
+              <td></td>
+            </tr>
+            {% for ride in drive_incomplete %}
+            <tr>
+              <td valign="middle" align="center">{{ forloop.counter }}</td>
+	      <td valign="middle" align="center">{{ ride.owner.username }}</td>
+              <td valign="middle" align="center">{{ ride.destination }}</td>
+              <td valign="middle" align="center">{{ ride.date }} {{ ride.time }}</td>
+              <td valign="middle" align="center">{{ ride.vehicle }}</td>
+              <td valign="middle" align="center"> {{ ride.status }} </td>
+              <td valign="middle" align="center"><a href="{% url 'users:ride_detail' user.id ride.id %}"> detail </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No confirmed ride currently.</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    
+    <!-- ride this user complete -->
+    {% if user.isDriver %}
+    <div class="form_style">
+      <h1>Ride Completed (as a driver)</h1>
+      <div>{% if drive_complete %}
+        <table border="1" align="center">
+          <colgroup>
+            <col width="100">
+	    <col width="200">
+            <col width="300">
+            <col width="300">
+            <col width="200">
+            <col width="200">
+            <col width="100">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td></td>
+	      <td valign="middle" align="center"><b> Owner </b>
+	      </td>
+              <td valign="middle" align="center"><b> Destination </b>
+              </td>
+              <td valign="middle" align="center"><b> Time </b>
+              </td>
+              <td valign="middle" align="center"><b> Vehicle </b>
+              </td>
+              <td valign="middle" align="center"><b> Status </b>
+              </td>
+              <td></td>
+            </tr>
+            {% for ride in drive_complete %}
+            <tr>
+              <td valign="middle" align="center">{{ forloop.counter }}</td>
+	      <td valign="middle" align="center">{{ ride.owner.username }}</td>
+              <td valign="middle" align="center">{{ ride.destination }}</td>
+              <td valign="middle" align="center">{{ ride.date }} {{ ride.time }}</td>
+              <td valign="middle" align="center">{{ ride.vehicle }}</td>
+              <td valign="middle" align="center"> {{ ride.status }} </td>
+              <td valign="middle" align="center"><a href="{% url 'users:ride_detail' user.id ride.id %}"> detail </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No complete ride currently.</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    
+  </body>
+</html>

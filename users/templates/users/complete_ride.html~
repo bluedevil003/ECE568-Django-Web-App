@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MyLyft-User</title>
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="header header_login">
+      <div class="header_username" style="color: grey;">
+        <a href="{% url 'homepage' user.username %}">Home</a> &nbsp&nbsp&nbsp&nbsp
+        <a href="{% url 'logout' %}">Log out</a>
+      </div>
+      <div class="header_title detail">
+        <h1> Engineering Robust Server Software</h1>
+        <h2>--Confirm Ride</h2>
+      </div>
+    </div>
+    <div class="form_style">
+      <h1> Confirm ride successfully! </h1>
+      <h2> <a href="{% url 'homepage' user.username %}"> Return home </a> </h2>
+    </div>
+  </body>
+</html>

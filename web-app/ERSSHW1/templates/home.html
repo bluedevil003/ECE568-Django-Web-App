@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <title>MyLyft-Home</title>
+    <style>
+      button{
+      width: 150px;
+      height: 30px;
+      margin: 0 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      color: white;
+      background-color: #000000;
+      }
+      button:hover {
+      text-decoration: underline;
+      }
+      
+    </style>
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  
+  <body>
+    <div class="header">
+      <div class="header_username"> <span>Welcome!</span>
+        <a href="{% url 'users:detail' user.id %}">{{ user.username }}</a>&nbsp&nbsp&nbsp&nbsp
+        <a href="{% url 'logout' %}">Log out</a>
+
+      </div>
+      <div class="header_title">
+        <h1> Engineering Robust Server Software</h1>
+
+      </div>
+    </div>
+    <div class="form_style">
+      <form action="" name="ride_request" method="">
+        <div class="form_list">
+          <div class="form_list_info">
+            <div class="form_list_info_detail" style="display:inline-block;width:260px;">
+              <h1 style="text-align:left;border-bottom:0px;">
+                Request new ride:
+              </h1>
+            </div>
+            
+            <div class="form_list_info_detail" style="display:inline-block;width:100px;">
+              <button onclick="request()" class="butt">Request</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="form_style">
+      <form action="" name="ride_info" method="" style="border-bottom: 1px solid black;">
+        <!-- csrf(Cross Site Request Forgery) post method must have this -->
+        {% csrf_token %}
+        <div class="form_list">
+          <div class="form_list_info">
+            <div class="form_list_info_detail">
+              <span>Destination: </span>
+              <input type="text" name="destination" value="{{ dst }}">
+            </div>
+          </div>
+          <div class="form_list_info">
+            <div class="form_list_info_detail">
+              <span>Number of passengers:</span>
+              <input type="number" min="1" max="10" name="numbers" value="{{ num }}">
+            </div>
+          </div>
+          <div class="form_list_info">
+            <div class="form_list_info_detail" style="height: 75px;">
+              <div class="input_special1">
+                <span>Start Time: </span>
+              </div>
+              <div class="input_special2">
+                <input type="date" name="sdate" value="{{ sdate }}">
+                <br />
+                <br />
+                <input type="time" name="stime" step="60" value="{{ stime }}">
+              </div>
+            </div>
+          </div>
+          <!-- End Time -->
+          <div class="form_list_info">
+            <div class="form_list_info_detail" style="height: 75px;">
+              <div class="input_special1">
+                <span>End Time: </span>
+              </div>
+              <div class="input_special2">
+                <input type="date" name="edate", value="{{ edate }}">
+                <br />
+                <br />
+                <input type="time" name="etime" step="60" value="{{ etime }}">
+              </div>
+            </div>
+          </div>
+          <div class="form_list_info">
+            <div class="form_list_info_detail" style="display:inline-block;width:260px;">
+              <h1 style="text-align:left;border-bottom:0px;">
+                Search open ride:
+              </h1>
+            </div>
+            <div class="form_list_info_detail" style="display:inline-block;width:100px;">
+              <button onclick="search()" class="butt">Search</button>
+            </div>
+          </div>
+          <!--<div class="form_list_info">
+              <div class="form_list_info_detail">
+                <span>Vehicle type: </span>
+                <input type="text" name="vehicle" list="vehiclelist">
+                <datalist id="vehiclelist">
+                  <option>car</option>
+                  <option>bike</option>
+                </datalist>
+              </div>
+          </div>
+          <div class="form_list_info">
+            <div class="form_list_info_detail">
+              <span>Special request: </span>
+              <input type="text" name="comment" style="height: 100px;">
+            </div>
+          </div>
+        </div>
+        <div class="form_foo">
+          <div class="form_foot">
+            <button onclick="search()" class="butt">Search</button>
+          </div>
+        </div>-->
+      </form>
+      </div>
+      <!-- List all available rides -->
+      <br>
+      <br>
+      <div>{% if ride_list %}
+        <table border="1" align="center">
+          <colgroup>
+            <col width="100">
+            <col width="200">
+            <col width="300">
+            <col width="300">
+            <col width="200">
+            <col width="200">
+            <col width="100">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td></td>
+              <td valign="middle" align="center"><b> Owner </b>
+              </td>
+              <td valign="middle" align="center"><b> Destination </b>
+              </td>
+              <td valign="middle" align="center"><b> Time </b>
+              </td>
+              <td valign="middle" align="center"><b> Vehicle Type </b>
+              </td>
+              <td valign="middle" align="center"><b> Passenger Number </b>
+              </td>
+              <td></td>
+            </tr>{% for ride in ride_list %}
+            <tr>
+              <td valign="middle" align="center">{{ forloop.counter }}</td>
+              <td valign="middle" align="center">{{ ride.owner.username }}</td>
+              <td valign="middle" align="center">{{ ride.destination }}</td>
+              <td valign="middle" align="center">{{ ride.date }} {{ ride.time }}</td>
+              <td valign="middle" align="center">{{ ride.vehicle }}</td>
+              <td valign="middle" align="center"> {{ ride.passenger_num }} ({{ ride.get_left_cap }} more available)</td>
+              <td valign="middle" align="center"><a href="{% url 'users:ride_detail' user.id ride.id %}"> detail </a>
+              </td>
+            </tr>{% endfor %}</tbody>
+        </table>{% else %}
+        <p>Currently no open rides are available.</p>{% endif %}</div>
+  </body>
+
+</html>
+<script>
+  function request() {
+  document.ride_request.action = "{% url 'users:ride_confirm' user.id 0 %}";
+  document.ride_request.method = "get"
+  document.ride_request.submit();
+  }
+
+  function search() {
+  document.ride_info.action = "/home/{{ user.username }}/";
+  document.ride_info.method = "post"
+  document.ride_info.submit();
+  }
+</script>

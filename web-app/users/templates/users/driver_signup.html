@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MyLyft-Driver Signup</title>
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="header header_login">
+      <div class="header_title">
+	<h1> Engineering Robust Server Software</h1>
+	<h2>--Driver Signup</h2>
+      </div>
+    </div>
+    <div class="form_style">
+      <h1>Driver signup</h1>
+      <form action="{% url 'users:signup_driver' user.id %}" , method="post">
+	<!-- csrf(Cross Site Request Forgery) post method must have this -->
+	{% csrf_token %}
+	<h2> Driver Information </h2>
+	Name: {{ user.username }}
+	<h2> Vehicle Information </h2>
+	<div class="form_list">
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>Vehicle type: </span>
+	      <input type="text" name="type" required>
+	    </div>
+	  </div>
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>License Plate Number: </span>
+	      <input type="text" name="license_number" required>
+	    </div>
+	  </div>
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>Maximum passengers: </span>
+	      <input type="number" name="max_num" min="2" required>
+	    </div>
+	  </div>
+	  <div class="form_list_info">
+	    <div class="form_list_info_detail">
+	      <span>Special Info: </span>
+	      <input type="text" name="comment">
+	    </div>
+	  </div>
+	</div>
+	<div class="form_foo">
+	  <div class="form_foot form_foo_singup">
+	    <button type="submit">Register</button>
+	  </div>
+	</div>
+      </form>
+    </div>
+    
+  </body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MyLyft-User</title>
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="header header_login">
+      <div class="header_username" style="color: grey;">
+        <a href="{% url 'homepage' user.username %}">Home</a> &nbsp&nbsp&nbsp&nbsp
+        <a href="{% url 'logout' %}">Log out</a>
+      </div>
+      <div class="header_title detail">
+        <h1> Engineering Robust Server Software</h1>
+        <h2>--Ride Information</h2>
+      </div>
+    </div>
+    <div class="form_style">
+      <!-- Only show edit button when current ride is "open" and "owned" by current user -->
+      {% if ediable %}
+      <h1>Ride Informaiton (<a href="{% url 'users:ride_confirm' user.id ride.id %}">Edit</a>)</h1>
+      {% else %}
+      <h1>Ride Informaiton</h1>
+      {% endif %}
+      <div class="form_list">
+        <div class="form_list_info">
+          <div class="form_list_info_detail infolist">
+            <ul>
+              <li> Owner: {{ ride.owner.username }} </li>
+              <li> Destination: {{ ride.destination }} </li>
+              <li> Date: {{ ride.date }} </li>
+              <li> Time: {{ ride.time }} </li>
+              <li> Vehicle: {{ ride.vehicle }} </li>
+              <li> Passenger number: {{ ride.passenger_num }} </li>
+              <li> Special information: {{ ride.special_info }} </li>
+              <li> Status: <font color="red"> {{ ride.status }} </font> </li>
+              <li> Driver:
+                {% if ride.driver_id == -1 %}
+                no driver confirmed yet
+                {% else %}
+                {{ driver_name }}
+                {% endif %}
+              </li>
+              <li> Can this ride be shared:
+                {% if ride.canShare %}
+                yes
+              <li> Sharers: </li>
+              <ul>
+                {% for s in ride.sharer.all %}
+                <li> {{ s.username }} </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              no
+              {% endif %}
+              </li>
+            </ul>
+          </div>
+          <br>
+          <span>{{ error_message }}</span>
+        </div>
+      </div>
+    </div>
+    {% if ride.owner != user %}
+    <!-- Only show option button when this ride is not own by current user -->
+    <div class="form_style">
+      <form action="" , name="ride_operation" , method="">
+        <!-- csrf(Cross Site Request Forgery) post method must have this -->
+        {% csrf_token %}
+        <!-- only show share button in open ride -->
+        {% if ride.get_left_cap > 0 and ride.status == "open" %}
+        <div class="form_list_info">
+          <div class="form_list_info_detail infolist" style="margin-bottom:50px;">
+            <span style="margin-left:80px;font-size:20px;width:300px;">Number of sharing passengers:</span>
+            <input type="number" min="1" max="8" name="new_num" value="1" style="text-align:center;width:200px;">
+          </div>
+        </div>
+        {% endif %}
+        <div class="form_foo">
+          <div class="form_foot">
+            {% if ride.get_left_cap > 0 and ride.status == "open" %}
+            <button onclick="share()" class="butt">Share</button>
+	    {% endif %}
+            {% if user.isDriver and ride.status == "open" %}
+            <button onclick="confirm()" class="butt">Confirm</button>
+            {% endif %}
+            {% if ride.driver_id == user.id %}
+            <button onclick="complete()" class="butt">Complete</button>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </body>
+</html>
+<script>
+  function share() {
+  document.ride_operation.action = "";
+  document.ride_operation.method = "post"
+  const operation_field = document.createElement("input")
+  operation_field.type = "hidden"
+  operation_field.name = "operation"
+  operation_field.value = "share"
+  document.ride_operation.appendChild(operation_field)
+  document.ride_operation.submit();
+  }
+
+  function confirm() {
+  document.ride_operation.action = "";
+  document.ride_operation.method = "post"
+  const operation_field = document.createElement("input")
+  operation_field.type = "hidden"
+  operation_field.name = "operation"
+  operation_field.value = "confirm"
+  document.ride_operation.appendChild(operation_field)
+  document.ride_operation.submit();
+  }
+
+  function complete() {
+  document.ride_operation.action = "";
+  document.ride_operation.method = "post"
+  const operation_field = document.createElement("input")
+  operation_field.type = "hidden"
+  operation_field.name = "operation"
+  operation_field.value = "complete"
+  document.ride_operation.appendChild(operation_field)
+  document.ride_operation.submit();
+  }
+</script>
+
